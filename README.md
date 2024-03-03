@@ -32,3 +32,18 @@
 5. База даних: Firestore DB.
 
 `Посилання на сайт:` https://dmytro1117.github.io/blog/
+
+## Installation
+
+```
+git clone https://github.com/Dmytro1117/blog.git
+npm install
+npm start
+Use your own Firebase Credentials
+```
+
+### Use your own Firebase Credentials
+
+- visit https://firebase.google.com/ and create a Firebase App
+- copy and paste your Credentials from your Firebase App into
+  src/redux/operations.js
