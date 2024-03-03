@@ -12,24 +12,6 @@ const BlogDetails = () => {
   const [blogInfo, setblogInfo] = useState(null);
   const dispatch = useDispatch();
 
-  // useEffect(() => {
-  //   const fetchBlogDetails = async () => {
-  //     try {
-  //       const detailBlog = await dispatch(fetchBlogById(blogId));
-  //       setblogInfo(detailBlog.payload);
-  //     } catch (error) {
-  //       console.log(error);
-  //     }
-  //   };
-
-  //   fetchBlogDetails();
-  // }, [dispatch, blogId]);
-
-  // const handleDeleteBlog = id => {
-  //   dispatch(deleteBlog(id));
-  //   Notify.failure(`Пост видалено`);
-  // };
-
   useEffect(() => {
     dispatch(fetchBlogById(blogId))
       .then(detailBlog => {
