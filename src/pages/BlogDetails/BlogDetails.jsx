@@ -12,22 +12,42 @@ const BlogDetails = () => {
   const [blogInfo, setblogInfo] = useState(null);
   const dispatch = useDispatch();
 
-  useEffect(() => {
-    const fetchBlogDetails = async () => {
-      try {
-        const detailBlog = await dispatch(fetchBlogById(blogId));
-        setblogInfo(detailBlog.payload);
-      } catch (error) {
-        console.log(error);
-      }
-    };
+  // useEffect(() => {
+  //   const fetchBlogDetails = async () => {
+  //     try {
+  //       const detailBlog = await dispatch(fetchBlogById(blogId));
+  //       setblogInfo(detailBlog.payload);
+  //     } catch (error) {
+  //       console.log(error);
+  //     }
+  //   };
 
-    fetchBlogDetails();
+  //   fetchBlogDetails();
+  // }, [dispatch, blogId]);
+
+  // const handleDeleteBlog = id => {
+  //   dispatch(deleteBlog(id));
+  //   Notify.failure(`Пост видалено`);
+  // };
+
+  useEffect(() => {
+    dispatch(fetchBlogById(blogId))
+      .then(detailBlog => {
+        setblogInfo(detailBlog.payload);
+      })
+      .catch(error => {
+        console.log(error);
+      });
   }, [dispatch, blogId]);
 
   const handleDeleteBlog = id => {
-    dispatch(deleteBlog(id));
-    Notify.failure(`Пост видалено`);
+    dispatch(deleteBlog(id))
+      .then(() => {
+        Notify.failure(`Пост видалено`);
+      })
+      .catch(error => {
+        console.log(error);
+      });
   };
 
   if (!blogInfo) {
@@ -41,8 +61,8 @@ const BlogDetails = () => {
       </Link>
 
       <Section title={blogInfo.name} key={blogInfo.id}>
-        <Text>Опис:{blogInfo.about}</Text>
-        <Text>Телефон:{blogInfo.phone}</Text>
+        <Text>Опис: {blogInfo.about}</Text>
+        <Text>Телефон: {blogInfo.phone}</Text>
         <Link to={{ pathname: '/home' }}>
           <IconDelete
             type="button"
