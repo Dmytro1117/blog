@@ -27,7 +27,7 @@ const BlogDetails = () => {
 
   const handleDeleteBlog = id => {
     dispatch(deleteBlog(id));
-    Notify.failure(`Блог видалено`);
+    Notify.failure(`Пост видалено`);
   };
 
   if (!blogInfo) {
