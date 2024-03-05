@@ -1,13 +1,17 @@
 import { Notify } from 'notiflix/build/notiflix-notify-aio';
-import { useDispatch } from 'react-redux';
+import { useAppDispatch, useAppSelector } from '../../redux/hooks';
 import { addBlog } from '../../redux/operations';
-import { useSelector } from 'react-redux';
-import { getBlogs } from '../../redux/selectors';
 import { z, ZodError } from 'zod';
-import css from './BlogForm.module.css';
-import { Formik, Form, Field } from 'formik';
+import { Label, Input, ButtonSubmit } from './BlogFormStyled';
+import { Formik, Form, Field, ErrorMessage } from 'formik';
 
-const schema = z.object({
+export type BlogFormValues = {
+  name: string;
+  about: string;
+  phone: string;
+};
+
+export const schema = z.object({
   name: z
     .string()
     .refine(value => /^\p{Lu}[\p{L}\s.'-]+$/u.test(value), {
@@ -30,17 +34,20 @@ const schema = z.object({
     }),
 });
 
-const initialValues = {
+export const initialValues: BlogFormValues = {
   name: '',
   about: '',
   phone: '',
 };
 
 export const BlogForm = () => {
-  const dispatch = useDispatch();
-  const blogs = useSelector(getBlogs);
+  const dispatch = useAppDispatch();
+  const { items } = useAppSelector(state => state.blog);
 
-  const handleSubmit = async (values, { resetForm }) => {
+  const handleSubmit = async (
+    values: BlogFormValues,
+    { resetForm }: { resetForm: () => void },
+  ) => {
     try {
       await schema.parseAsync(values);
     } catch (error) {
@@ -55,7 +62,7 @@ export const BlogForm = () => {
     const { name, about, phone } = values;
 
     if (
-      blogs.some(
+      items.some(
         num =>
           num.name.toLowerCase() === name.toLowerCase() || num.phone === phone,
       )
@@ -78,22 +85,38 @@ export const BlogForm = () => {
   return (
     <Formik initialValues={initialValues} onSubmit={handleSubmit}>
       <Form autoComplete="off">
-        <label className={css.labelName} htmlFor="name">
+        <Label htmlFor="name">
           Назва посту
-          <Field placeholder="Введіть тему" type="text" name="name" />
-        </label>
-        <label className={css.labelName} htmlFor="about">
+          <Field
+            placeholder="Введіть тему"
+            as={Input}
+            type="text"
+            name="name"
+          />
+          <ErrorMessage name="name" component="div" />
+        </Label>
+        <Label htmlFor="about">
           Зміст посту
-          <Field placeholder="Напишіть свої думки" type="text" name="about" />
-        </label>
-        <label className={css.labelName} htmlFor="phone">
+          <Field
+            placeholder="Напишіть свої думки"
+            as={Input}
+            type="text"
+            name="about"
+          />
+          <ErrorMessage name="about" component="div" />
+        </Label>
+        <Label htmlFor="phone">
           Телефон автора
-          <Field placeholder="Введіть номер" type="tel" name="phone" />
-        </label>
+          <Field
+            placeholder="Введіть номер"
+            as={Input}
+            type="tel"
+            name="phone"
+          />
+          <ErrorMessage name="phone" component="div" />
+        </Label>
 
-        <button className={css.buttonAddBlog} type="submit">
-          Додати
-        </button>
+        <ButtonSubmit type="submit">Додати</ButtonSubmit>
       </Form>
     </Formik>
   );

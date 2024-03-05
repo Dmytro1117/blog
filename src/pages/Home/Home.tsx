@@ -1,25 +1,23 @@
 import { useEffect } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
+import { useAppDispatch, useAppSelector } from '../../redux/hooks';
 import { Section } from '../../components/Section/Section';
 import { BlogForm } from '../../components/BlogForm/BlogForm';
 import { BlogList } from '../../components/BlogList/BlogList';
 import { Loader } from '../../components/Loader/Loader';
 import { fetchBlogs } from '../../redux/operations';
-import { selectError, selectIsLoading } from '../../redux/selectors';
-import css from './Home.module.css';
+import { Container, TitlePage } from './HomeStyles';
 
-const Home = () => {
-  const dispatch = useDispatch();
-  const isLoading = useSelector(selectIsLoading);
-  const error = useSelector(selectError);
+const Home: React.FC = () => {
+  const dispatch = useAppDispatch();
+  const { isLoading, error } = useAppSelector(state => state.blog);
 
   useEffect(() => {
     dispatch(fetchBlogs());
   }, [dispatch]);
 
   return (
-    <div className={css.container}>
-      <h1 className={css.titlePage}>Блог</h1>
+    <Container>
+      <TitlePage>Блог</TitlePage>
       <Section title={'Додати новий пост:'}>
         <BlogForm />
       </Section>
@@ -28,7 +26,7 @@ const Home = () => {
       <Section title={'Список постів:'}>
         <BlogList />
       </Section>
-    </div>
+    </Container>
   );
 };
 export default Home;

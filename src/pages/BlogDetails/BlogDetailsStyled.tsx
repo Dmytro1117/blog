@@ -1,5 +1,6 @@
 import styled from '@emotion/styled';
 import { CiTrash } from 'react-icons/ci';
+import { FaEdit } from 'react-icons/fa';
 
 export const List = styled.ul`
   display: flex;
@@ -9,6 +10,17 @@ export const List = styled.ul`
 `;
 
 export const IconDelete = styled(CiTrash)`
+  cursor: pointer;
+  color: rgba(104, 105, 107, 0.877);
+  margin-top: 16px;
+
+  &:hover {
+    cursor: pointer;
+    color: rgba(219, 39, 15, 0.781);
+  }
+`;
+
+export const IconEdit = styled(FaEdit)`
   cursor: pointer;
   color: rgba(104, 105, 107, 0.877);
   margin-top: 16px;

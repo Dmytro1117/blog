@@ -1,9 +1,9 @@
 import { Triangle } from 'react-loader-spinner';
-import css from './Loader.module.css';
+import { ContainerLoader } from './LoaderStyled';
 
-export const Loader = () => {
+export const Loader: React.FC = () => {
   return (
-    <div className={css.div}>
+    <ContainerLoader>
       <Triangle
         visible={true}
         height="80"
@@ -13,6 +13,6 @@ export const Loader = () => {
         wrapperClass="blocks-wrapper"
         color="skyblue"
       />
-    </div>
+    </ContainerLoader>
   );
 };
