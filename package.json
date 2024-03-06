@@ -23,7 +23,6 @@
     "react-loader-spinner": "^5.4.5",
     "react-redux": "^8.0.5",
     "react-router-dom": "^6.22.2",
-    "web-vitals": "^3.5.2",
     "zod": "^3.22.4"
   },
   "devDependencies": {

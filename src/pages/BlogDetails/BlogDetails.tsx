@@ -2,7 +2,12 @@ import React, { useEffect, useState } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { useAppDispatch } from '../../redux/hooks';
 import { Notify } from 'notiflix/build/notiflix-notify-aio';
-import { deleteBlog, fetchBlogById, updateBlog } from '../../redux/operations';
+import {
+  deleteBlog,
+  fetchBlogById,
+  updateBlog,
+  fetchBlogs,
+} from '../../redux/operations';
 import { Section } from '../../components/Section/Section';
 import { Button, Text, IconDelete, IconEdit } from './BlogDetailsStyled';
 import { Loader } from '../../components/Loader/Loader';
@@ -20,6 +25,7 @@ const BlogDetails: React.FC = () => {
   const { blogId } = useParams<{ blogId: string }>();
   const [blogInfo, setBlogInfo] = useState<Blog | null>(null);
   const [editMode, setEditMode] = useState(false);
+  const [deleteButtonDisabled, setDeleteButtonDisabled] = useState(false);
   const dispatch = useAppDispatch();
 
   useEffect(() => {
@@ -38,8 +44,27 @@ const BlogDetails: React.FC = () => {
     }
   }, [dispatch, blogId]);
 
-  const handleDeleteBlog = (id: string) => {
+  const refreshPosts = () => {
+    dispatch(fetchBlogs());
+  };
+
+  const handleDeleteBlog = async (id: string) => {
+    setDeleteButtonDisabled(true);
+
     if (editMode) {
+      try {
+        await schema.parseAsync(blogInfo as Blog);
+      } catch (error) {
+        if (error instanceof ZodError) {
+          const errorMessage = Object.values(error.errors)
+            .map(e => e.message)
+            .join('\n');
+          Notify.warning(errorMessage);
+          setDeleteButtonDisabled(false);
+          return;
+        }
+      }
+
       dispatch(updateBlog(blogInfo as Blog))
         .then(() => {
           Notify.success('Пост оновлено');
@@ -47,20 +72,24 @@ const BlogDetails: React.FC = () => {
         })
         .catch(error => {
           console.log(error);
+          Notify.failure('Помилка при оновленні поста');
+        })
+        .finally(() => {
+          setDeleteButtonDisabled(false);
         });
     } else {
       dispatch(deleteBlog(id))
         .then(() => {
+          refreshPosts();
           Notify.failure(`Пост видалено`);
         })
         .catch(error => {
           console.log(error);
+        })
+        .finally(() => {
+          setDeleteButtonDisabled(false);
         });
     }
-  };
-
-  const handleEdit = () => {
-    setEditMode(true);
   };
 
   const handleSave = async () => {
@@ -79,6 +108,7 @@ const BlogDetails: React.FC = () => {
       .then(() => {
         Notify.success('Пост оновлено');
         setEditMode(false);
+        refreshPosts();
       })
       .catch(error => {
         console.log(error);
@@ -148,16 +178,24 @@ const BlogDetails: React.FC = () => {
           <>
             <Text>Опис: {blogInfo.about}</Text>
             <Text>Телефон: {blogInfo.phone}</Text>
-            <IconEdit type="button" size={24} onClick={handleEdit} />
+            <IconEdit
+              type="button"
+              size={24}
+              onClick={() => setEditMode(true)}
+            />
+            {!editMode && (
+              <Link to={{ pathname: '/home' }}>
+                {!deleteButtonDisabled ? (
+                  <IconDelete
+                    type="button"
+                    size={24}
+                    onClick={() => handleDeleteBlog(blogInfo.id)}
+                  />
+                ) : null}
+              </Link>
+            )}
           </>
         )}
-        <Link to={{ pathname: '/home' }}>
-          <IconDelete
-            type="button"
-            size={24}
-            onClick={() => handleDeleteBlog(blogInfo.id)}
-          />
-        </Link>
       </Section>
     </>
   );

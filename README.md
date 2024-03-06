@@ -2,6 +2,7 @@
 
 ## Стек технологій
 
+![TypeScript](https://img.shields.io/badge/typescript-%23007ACC.svg?style=for-the-badge&logo=typescript&logoColor=white)
 ![React](https://img.shields.io/badge/React-20232A?style=for-the-badge&logo=react&logoColor=61DAFB)
 ![Redux](https://img.shields.io/badge/Redux-593D88?style=for-the-badge&logo=redux&logoColor=white)
 ![Router](https://img.shields.io/badge/React_Router-CA4245?style=for-the-badge&logo=react-router&logoColor=white)
@@ -26,7 +27,7 @@
 3. Форма створення поста: Реалізована форма з використанням Zod для валідації
    введених користувачем даних.
 
-4. Видалення посту: Легко видаляйте створені пости, які вам більше не потрібні.
+4. Видалення та редагування посту: Легко редагуйте або видаляйте створені пости.
 
 5. База даних: Firestore DB.
 
@@ -38,11 +39,11 @@
 git clone https://github.com/Dmytro1117/blog.git
 npm install
 npm start
-Use your own Firebase Credentials
+
 ```
 
-### Use your own Firebase Credentials
+### Використовуйте власні облікові дані Firebase
 
-- visit https://firebase.google.com/ and create a Firebase App
-- copy and paste your Credentials from your Firebase App into
+- відвідайте https://firebase.google.com/ і створіть власний проєкт
+- скопіюйте ваш firebaseConfig і замініть існуючі, що знаходяться
   src/redux/operations.js
