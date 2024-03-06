@@ -39,11 +39,10 @@
 git clone https://github.com/Dmytro1117/blog.git
 npm install
 npm start
-
 ```
 
 ### Використовуйте власні облікові дані Firebase
 
 - відвідайте https://firebase.google.com/ і створіть власний проєкт
-- скопіюйте ваш firebaseConfig і замініть існуючі, що знаходяться
+- скопіюйте ваш firebaseConfig і замініть існуючі налаштування, що знаходяться
   src/redux/operations.js
