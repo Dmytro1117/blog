@@ -1,7 +1,7 @@
 import React from 'react';
-import { List, BlogLink, Text } from './BlogListStyled';
 import { useLocation } from 'react-router-dom';
-import { useAppSelector } from '../../redux/hooks';
+import { useAppSelector } from 'types/hooks';
+import { List, BlogLink, Text } from './BlogListStyled';
 
 export const BlogList: React.FC = () => {
   const { items } = useAppSelector(state => state.blog);

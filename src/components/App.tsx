@@ -2,8 +2,8 @@ import React, { lazy } from 'react';
 import { Route, Routes } from 'react-router-dom';
 import { Loader } from './Loader/Loader';
 
-const Home = lazy(() => import('../pages/Home/Home'));
-const BlogDetails = lazy(() => import('../pages/BlogDetails/BlogDetails'));
+const Home = lazy(() => import('pages/Home/Home'));
+const BlogDetails = lazy(() => import('pages/BlogDetails/BlogDetails'));
 
 const App = () => {
   return (

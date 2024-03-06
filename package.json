@@ -27,6 +27,7 @@
   },
   "devDependencies": {
     "@types/react-dom": "^18.2.19",
+    "@types/react-icons": "^3.0.0",
     "@vitejs/plugin-react-swc": "^3.3.2",
     "eslint": "^8.45.0",
     "eslint-plugin-react": "^7.32.2",

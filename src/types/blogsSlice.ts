@@ -1,4 +1,4 @@
-import { createSlice, PayloadAction } from '@reduxjs/toolkit';
+import { createSlice } from '@reduxjs/toolkit';
 import { fetchBlogs, addBlog, deleteBlog, fetchBlogById } from './operations';
 
 export type Blog = {

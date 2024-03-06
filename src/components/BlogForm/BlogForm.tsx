@@ -1,9 +1,9 @@
 import { Notify } from 'notiflix/build/notiflix-notify-aio';
-import { useAppDispatch, useAppSelector } from '../../redux/hooks';
-import { addBlog } from '../../redux/operations';
 import { z, ZodError } from 'zod';
-import { Label, Input, ButtonSubmit } from './BlogFormStyled';
 import { Formik, Form, Field, ErrorMessage } from 'formik';
+import { useAppDispatch, useAppSelector } from 'types/hooks';
+import { addBlog } from 'types/operations';
+import { Label, Input, ButtonSubmit } from './BlogFormStyled';
 
 export type BlogFormValues = {
   name: string;

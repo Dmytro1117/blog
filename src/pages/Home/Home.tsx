@@ -1,10 +1,10 @@
 import { useEffect } from 'react';
-import { useAppDispatch, useAppSelector } from '../../redux/hooks';
-import { Section } from '../../components/Section/Section';
-import { BlogForm } from '../../components/BlogForm/BlogForm';
-import { BlogList } from '../../components/BlogList/BlogList';
-import { Loader } from '../../components/Loader/Loader';
-import { fetchBlogs } from '../../redux/operations';
+import { useAppDispatch, useAppSelector } from 'types/hooks';
+import { Section } from 'components/Section/Section';
+import { fetchBlogs } from 'types/operations';
+import { BlogForm } from 'components/BlogForm/BlogForm';
+import { Loader } from 'components/Loader/Loader';
+import { BlogList } from 'components/BlogList/BlogList';
 import { Container, TitlePage } from './HomeStyles';
 
 const Home: React.FC = () => {

@@ -5,4 +5,11 @@ import react from '@vitejs/plugin-react-swc';
 export default defineConfig({
   base: '/blog',
   plugins: [react()],
+  resolve: {
+    alias: {
+      components: '/src/components',
+      types: '/src/types',
+      pages: '/src/pages',
+    },
+  },
 });

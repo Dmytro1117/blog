@@ -1,25 +1,21 @@
 import React, { useEffect, useState } from 'react';
 import { useParams, Link } from 'react-router-dom';
-import { useAppDispatch } from '../../redux/hooks';
 import { Notify } from 'notiflix/build/notiflix-notify-aio';
+import { ZodError } from 'zod';
+import { Formik, Form, Field, ErrorMessage } from 'formik';
+import { Loader } from 'components/Loader/Loader';
+import { Blog } from 'types/blogsSlice';
+import { useAppDispatch } from 'types/hooks';
 import {
   deleteBlog,
   fetchBlogById,
-  updateBlog,
   fetchBlogs,
-} from '../../redux/operations';
-import { Section } from '../../components/Section/Section';
+  updateBlog,
+} from 'types/operations';
+import { initialValues, schema } from 'components/BlogForm/BlogForm';
+import { Section } from 'components/Section/Section';
+import { ButtonSubmit, Input, Label } from 'components/BlogForm/BlogFormStyled';
 import { Button, Text, IconDelete, IconEdit } from './BlogDetailsStyled';
-import { Loader } from '../../components/Loader/Loader';
-import { Blog } from '../../redux/blogsSlice';
-import {
-  Label,
-  Input,
-  ButtonSubmit,
-} from '../../components/BlogForm/BlogFormStyled';
-import { Formik, Form, Field, ErrorMessage } from 'formik';
-import { schema, initialValues } from '../../components/BlogForm/BlogForm';
-import { ZodError } from 'zod';
 
 const BlogDetails: React.FC = () => {
   const { blogId } = useParams<{ blogId: string }>();

@@ -1,9 +1,9 @@
 import { createAsyncThunk } from '@reduxjs/toolkit';
-import { collection, addDoc, deleteDoc, doc, setDoc } from 'firebase/firestore';
-import { getFirestore } from 'firebase/firestore';
 import { initializeApp } from 'firebase/app';
-import { Blog } from '../redux/blogsSlice';
+import { collection, addDoc, deleteDoc, doc, setDoc } from 'firebase/firestore';
 import { getDocs, getDoc, orderBy, query } from 'firebase/firestore';
+import { getFirestore } from 'firebase/firestore';
+import { Blog } from './blogsSlice';
 
 const firebaseConfig = {
   apiKey: 'AIzaSyCqNoQovi8EGtCl5oa7phFawWQIVj8pmIk',
@@ -15,6 +15,8 @@ const firebaseConfig = {
   messagingSenderId: '684749352586',
   appId: '1:684749352586:web:5b506fb1d15498cd5f8773',
 };
+
+type AddBlogArguments = Omit<Blog, 'id'>;
 
 const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
@@ -41,8 +43,6 @@ export const fetchBlogs = createAsyncThunk<
 
   return blogsData;
 });
-
-type AddBlogArguments = Omit<Blog, 'id'>;
 
 export const addBlog = createAsyncThunk<
   Blog,
