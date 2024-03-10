@@ -49,17 +49,20 @@ export const Text = styled.p`
   overflow: hidden;
   font-size: 20px;
   font-weight: 500;
-  margin-bottom: 16px;
+  margin-bottom: 8px;
+  margin-top: 8px;
 
   @media (max-width: 480px) {
     font-size: 14px;
     font-weight: 400;
-    margin-bottom: 8px;
+    margin-bottom: 4px;
+    margin-top: 4px;
   }
 
   @media (min-width: 481px) and (max-width: 767px) {
     font-size: 18px;
     font-weight: 500;
-    margin-bottom: 10px;
+    margin-bottom: 6px;
+    margin-top: 6px;
   }
 `;

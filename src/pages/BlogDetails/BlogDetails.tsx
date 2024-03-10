@@ -1,19 +1,16 @@
 import React, { useEffect, useState } from 'react';
 import { useForm, SubmitHandler } from 'react-hook-form';
-import { useParams, Link } from 'react-router-dom';
+// import { useParams, Link } from 'react-router-dom';
+import { useParams, useNavigate } from 'react-router-dom';
 import { Notify } from 'notiflix/build/notiflix-notify-aio';
 import { ZodError } from 'zod';
 import { Loader } from 'components/Loader/Loader';
 import { Blog } from 'types/blogsSlice';
 import { useAppDispatch } from 'types/hooks';
-import {
-  deleteBlog,
-  fetchBlogById,
-  fetchBlogs,
-  updateBlog,
-} from 'types/operations';
+import { deleteBlog, fetchBlogById, updateBlog } from 'types/operations';
 import { schema } from 'components/BlogForm/BlogForm';
 import { Section } from 'components/Section/Section';
+import { InitNotify, MyNotifyOptions } from 'types/notifyInit';
 import { ButtonSubmit, Input, Label } from 'components/BlogForm/BlogFormStyled';
 import { Button, Text, IconDelete, IconEdit } from './BlogDetailsStyled';
 
@@ -23,11 +20,15 @@ type BlogFormValues = {
   phone: string;
 };
 
+Notify.init(InitNotify as MyNotifyOptions);
+
 const BlogDetails: React.FC = () => {
   const { blogId } = useParams<{ blogId: string }>();
   const [blogInfo, setBlogInfo] = useState<Blog | null>(null);
   const [editMode, setEditMode] = useState(false);
+  const navigate = useNavigate();
   const dispatch = useAppDispatch();
+
   const {
     register,
     handleSubmit,
@@ -36,28 +37,25 @@ const BlogDetails: React.FC = () => {
   } = useForm<BlogFormValues>();
 
   useEffect(() => {
-    const fetchData = async () => {
-      try {
-        await dispatch(fetchBlogs());
-        if (blogId) {
-          const detailBlog = await dispatch(fetchBlogById(blogId));
+    if (blogId) {
+      dispatch(fetchBlogById(blogId))
+        .then(detailBlog => {
           if (detailBlog.payload && typeof detailBlog.payload === 'object') {
             setBlogInfo(detailBlog.payload);
+
             reset({
               name: detailBlog.payload.name,
               about: detailBlog.payload.about,
               phone: detailBlog.payload.phone,
             });
           } else {
-            console.log('Error:', detailBlog.payload);
+            console.log('Invalid payload received:', detailBlog.payload);
           }
-        }
-      } catch (error) {
-        console.log(error);
-      }
-    };
-
-    fetchData();
+        })
+        .catch(error => {
+          console.log(error);
+        });
+    }
   }, [dispatch, blogId, reset]);
 
   const updateField = (fieldName: keyof Blog) => (value: string) => {
@@ -71,6 +69,7 @@ const BlogDetails: React.FC = () => {
     dispatch(deleteBlog(id))
       .then(() => {
         Notify.failure(`Пост видалено`);
+        navigate('/list');
       })
       .catch(error => {
         console.log(error);
@@ -107,9 +106,9 @@ const BlogDetails: React.FC = () => {
 
   return (
     <>
-      <Link to={{ pathname: '/list' }}>
-        <Button type="button">Повернутися</Button>
-      </Link>
+      <Button type="button" onClick={() => navigate('/list')}>
+        Повернутися
+      </Button>
 
       <Section title={blogInfo.name} key={blogInfo.id}>
         {editMode ? (
@@ -158,13 +157,11 @@ const BlogDetails: React.FC = () => {
               onClick={() => setEditMode(true)}
             />
 
-            <Link to={{ pathname: '/list' }}>
-              <IconDelete
-                type="button"
-                size={24}
-                onClick={() => handleDeleteBlog(blogInfo.id)}
-              />
-            </Link>
+            <IconDelete
+              type="button"
+              size={24}
+              onClick={() => handleDeleteBlog(blogInfo.id)}
+            />
           </>
         )}
       </Section>
