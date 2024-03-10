@@ -27,7 +27,6 @@ const BlogDetails: React.FC = () => {
   const { blogId } = useParams<{ blogId: string }>();
   const [blogInfo, setBlogInfo] = useState<Blog | null>(null);
   const [editMode, setEditMode] = useState(false);
-  const [deleteButtonDisabled, setDeleteButtonDisabled] = useState(false);
   const dispatch = useAppDispatch();
   const {
     register,
@@ -37,30 +36,29 @@ const BlogDetails: React.FC = () => {
   } = useForm<BlogFormValues>();
 
   useEffect(() => {
-    if (blogId) {
-      dispatch(fetchBlogById(blogId))
-        .then(detailBlog => {
+    const fetchData = async () => {
+      try {
+        await dispatch(fetchBlogs());
+        if (blogId) {
+          const detailBlog = await dispatch(fetchBlogById(blogId));
           if (detailBlog.payload && typeof detailBlog.payload === 'object') {
             setBlogInfo(detailBlog.payload);
-
             reset({
               name: detailBlog.payload.name,
               about: detailBlog.payload.about,
               phone: detailBlog.payload.phone,
             });
           } else {
-            console.log('Invalid payload received:', detailBlog.payload);
+            console.log('Error:', detailBlog.payload);
           }
-        })
-        .catch(error => {
-          console.log(error);
-        });
-    }
-  }, [dispatch, blogId, reset]);
+        }
+      } catch (error) {
+        console.log(error);
+      }
+    };
 
-  const refreshPosts = () => {
-    dispatch(fetchBlogs());
-  };
+    fetchData();
+  }, [dispatch, blogId, reset]);
 
   const updateField = (fieldName: keyof Blog) => (value: string) => {
     setBlogInfo(prevState => ({
@@ -69,49 +67,15 @@ const BlogDetails: React.FC = () => {
     }));
   };
 
-  const handleDeleteBlog = async (id: string) => {
-    setDeleteButtonDisabled(true);
-
-    if (editMode) {
-      try {
-        await schema.parseAsync(blogInfo as Blog);
-      } catch (error) {
-        if (error instanceof ZodError) {
-          const errorMessage = Object.values(error.errors)
-            .map(e => e.message)
-            .join('\n');
-          Notify.warning(errorMessage);
-          setDeleteButtonDisabled(false);
-          return;
-        }
-      }
-
-      dispatch(updateBlog(blogInfo as Blog))
-        .then(() => {
-          Notify.success('Пост оновлено');
-          setEditMode(false);
-        })
-        .catch(error => {
-          console.log(error);
-          Notify.failure('Помилка при оновленні посту');
-        })
-        .finally(() => {
-          setDeleteButtonDisabled(false);
-        });
-    } else {
-      dispatch(deleteBlog(id))
-        .then(() => {
-          refreshPosts();
-          Notify.failure(`Пост видалено`);
-        })
-        .catch(error => {
-          console.log(error);
-          Notify.failure('Помилка при видаленні посту');
-        })
-        .finally(() => {
-          setDeleteButtonDisabled(false);
-        });
-    }
+  const handleDeleteBlog = (id: string) => {
+    dispatch(deleteBlog(id))
+      .then(() => {
+        Notify.failure(`Пост видалено`);
+      })
+      .catch(error => {
+        console.log(error);
+        Notify.failure('Помилка при видаленні посту');
+      });
   };
 
   const onSubmit: SubmitHandler<BlogFormValues> = async data => {
@@ -130,7 +94,6 @@ const BlogDetails: React.FC = () => {
       .then(() => {
         Notify.success('Пост оновлено');
         setEditMode(false);
-        refreshPosts();
       })
       .catch(error => {
         console.log(error);
@@ -194,17 +157,14 @@ const BlogDetails: React.FC = () => {
               size={24}
               onClick={() => setEditMode(true)}
             />
-            {!editMode && (
-              <Link to={{ pathname: '/list' }}>
-                {!deleteButtonDisabled ? (
-                  <IconDelete
-                    type="button"
-                    size={24}
-                    onClick={() => handleDeleteBlog(blogInfo.id)}
-                  />
-                ) : null}
-              </Link>
-            )}
+
+            <Link to={{ pathname: '/list' }}>
+              <IconDelete
+                type="button"
+                size={24}
+                onClick={() => handleDeleteBlog(blogInfo.id)}
+              />
+            </Link>
           </>
         )}
       </Section>

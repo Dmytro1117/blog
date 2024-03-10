@@ -1,4 +1,4 @@
-import { useEffect } from 'react';
+import { useEffect, useMemo } from 'react';
 import { useAppDispatch, useAppSelector } from 'types/hooks';
 import { fetchBlogs } from 'types/operations';
 import { Loader } from 'components/Loader/Loader';
@@ -9,6 +9,8 @@ const PostsList: React.FC = () => {
   const dispatch = useAppDispatch();
   const { isLoading, error } = useAppSelector(state => state.blog);
 
+  const blogListComponent = useMemo(() => <BlogList />, []);
+
   useEffect(() => {
     dispatch(fetchBlogs());
   }, [dispatch]);
@@ -17,7 +19,7 @@ const PostsList: React.FC = () => {
     <Container>
       <TitlePage>Список постів</TitlePage>
       {isLoading && !error && <Loader />}
-      <BlogList />
+      {blogListComponent}
     </Container>
   );
 };

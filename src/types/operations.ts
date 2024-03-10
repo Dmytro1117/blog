@@ -44,19 +44,34 @@ export const fetchBlogs = createAsyncThunk<
   return blogsData;
 });
 
+// export const addBlog = createAsyncThunk<
+//   Blog,
+//   AddBlogArguments,
+//   { rejectValue: string }
+// >('blog/addBlog', async (newBlog, { rejectWithValue }) => {
+//   const blogsCollection = collection(db, 'blog');
+//   const docRef = await addDoc(blogsCollection, newBlog);
+
+//   if (!docRef) {
+//     return rejectWithValue('Серверна помилка');
+//   }
+
+//   return { id: docRef.id, ...newBlog };
+// });
+
 export const addBlog = createAsyncThunk<
   Blog,
   AddBlogArguments,
   { rejectValue: string }
 >('blog/addBlog', async (newBlog, { rejectWithValue }) => {
-  const blogsCollection = collection(db, 'blog');
-  const docRef = await addDoc(blogsCollection, newBlog);
+  try {
+    const blogsCollection = collection(db, 'blog');
+    const docRef = await addDoc(blogsCollection, newBlog);
 
-  if (!docRef) {
+    return { id: docRef.id, ...newBlog };
+  } catch (error) {
     return rejectWithValue('Серверна помилка');
   }
-
-  return { id: docRef.id, ...newBlog };
 });
 
 export const fetchBlogById = createAsyncThunk<
@@ -86,26 +101,26 @@ export const deleteBlog = createAsyncThunk<
   string,
   { rejectValue: string }
 >('blog/deleteBlog', async (id, { rejectWithValue }) => {
-  const blogDocRef = doc(db, 'blog', id);
-  await deleteDoc(blogDocRef);
+  try {
+    const blogDocRef = doc(db, 'blog', id);
+    await deleteDoc(blogDocRef);
 
-  if (!blogDocRef) {
+    return id;
+  } catch (error) {
     return rejectWithValue('Помилка');
   }
-
-  return id;
 });
 
 export const updateBlog = createAsyncThunk<Blog, Blog, { rejectValue: string }>(
   'blog/updateBlog',
   async (updatedBlog, { rejectWithValue }) => {
-    const blogDocRef = doc(db, 'blog', updatedBlog.id);
-    await setDoc(blogDocRef, updatedBlog, { merge: true });
+    try {
+      const blogDocRef = doc(db, 'blog', updatedBlog.id);
+      await setDoc(blogDocRef, updatedBlog, { merge: true });
 
-    if (!blogDocRef) {
+      return updatedBlog;
+    } catch (error) {
       return rejectWithValue('Помилка');
     }
-
-    return updatedBlog;
   },
 );
