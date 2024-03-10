@@ -1,12 +1,11 @@
 import { useEffect } from 'react';
-import { fetchBlogs } from 'types/operations';
 import { useAppDispatch, useAppSelector } from 'types/hooks';
-import { Section } from 'components/Section/Section';
-import { BlogForm } from 'components/BlogForm/BlogForm';
+import { fetchBlogs } from 'types/operations';
 import { Loader } from 'components/Loader/Loader';
-import { Container, TitlePage } from './HomeStyles';
+import { BlogList } from 'components/BlogList/BlogList';
+import { Container, TitlePage } from './PostsListStyles';
 
-const Home: React.FC = () => {
+const PostsList: React.FC = () => {
   const dispatch = useAppDispatch();
   const { isLoading, error } = useAppSelector(state => state.blog);
 
@@ -16,12 +15,10 @@ const Home: React.FC = () => {
 
   return (
     <Container>
-      <TitlePage>Додати запис</TitlePage>
+      <TitlePage>Список постів</TitlePage>
       {isLoading && !error && <Loader />}
-      <Section title={'Додати новий:'}>
-        <BlogForm />
-      </Section>
+      <BlogList />
     </Container>
   );
 };
-export default Home;
+export default PostsList;

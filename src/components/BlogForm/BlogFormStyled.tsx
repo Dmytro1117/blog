@@ -8,7 +8,7 @@ export const Label = styled.label`
   }
 
   @media (min-width: 481px) and (max-width: 767px) {
-    width: 400px;
+    width: 320px;
     margin-bottom: 12px;
     font-size: 14px;
     padding: 8px 14px;
@@ -32,14 +32,14 @@ export const Input = styled.input`
   }
 
   @media (max-width: 480px) {
-    width: 300px;
+    width: 250px;
     margin-bottom: 8px;
     font-size: 12px;
     padding: 6px 12px;
   }
 
   @media (min-width: 481px) and (max-width: 767px) {
-    width: 400px;
+    width: 360px;
     margin-bottom: 12px;
     font-size: 14px;
     padding: 8px 14px;

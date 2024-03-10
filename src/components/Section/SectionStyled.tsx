@@ -11,14 +11,14 @@ export const Container = styled.section`
   align-items: center;
 
   @media (max-width: 480px) {
-    width: 400px;
+    width: 300px;
     padding: 8px;
     margin: 12px auto;
   }
 
   @media (min-width: 481px) and (max-width: 767px) {
-    width: 500px;
-    padding: 16px;
+    width: 400px;
+    padding: 24px;
     box-shadow: 4px 4px 8px #8888888e;
     margin: 18px auto;
   }

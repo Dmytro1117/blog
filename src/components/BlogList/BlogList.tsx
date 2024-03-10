@@ -1,21 +1,45 @@
 import React from 'react';
 import { useLocation } from 'react-router-dom';
 import { useAppSelector } from 'types/hooks';
+import { AnimatePresence, motion } from 'framer-motion';
 import { List, BlogLink, Text } from './BlogListStyled';
+import { Container } from './BlogListStyled';
+import notFound from 'images/guest-blogging.jpg';
+import { Img } from 'pages/StarttngPage/StartingPageStyled';
 
 export const BlogList: React.FC = () => {
   const { items } = useAppSelector(state => state.blog);
   const location = useLocation();
 
+  const variants = {
+    hidden: { opacity: 0, x: -200 },
+    visible: { opacity: 1, x: 0 },
+  };
+
   return items.length === 0 ? (
-    <p>Постів ще не створено</p>
+    <>
+      <p>Постів ще не створено</p>
+      <Img src={notFound} alt="notFound" />
+    </>
   ) : (
-    <List>
-      {items.map(({ id, name }) => (
-        <BlogLink to={`/details/${id}`} key={id} state={{ from: location }}>
-          <Text>{name}</Text>
-        </BlogLink>
-      ))}
-    </List>
+    <AnimatePresence mode="wait">
+      <List>
+        {items.map(({ id, name }) => (
+          <motion.div
+            initial="hidden"
+            key={id}
+            animate="visible"
+            variants={variants}
+            transition={{ duration: 1.2 }}
+          >
+            <BlogLink to={`/list/details/${id}`} state={{ from: location }}>
+              <Container>
+                <Text>{name}</Text>
+              </Container>
+            </BlogLink>
+          </motion.div>
+        ))}
+      </List>
+    </AnimatePresence>
   );
 };

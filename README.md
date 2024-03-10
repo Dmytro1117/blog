@@ -12,6 +12,8 @@
 ![Eslint](https://img.shields.io/badge/eslint-3A33D1?style=for-the-badge&logo=eslint&logoColor=white)
 ![Vite](https://img.shields.io/badge/Vite-B73BFE?style=for-the-badge&logo=vite&logoColor=FFD62E)
 ![Firebase](https://img.shields.io/badge/firebase-ffca28?style=for-the-badge&logo=firebase&logoColor=black)
+![ReactHookForm](https://img.shields.io/badge/React%20Hook%20Form-%23EC5990.svg?style=for-the-badge&logo=reacthookform&logoColor=white)
+![Saga](https://img.shields.io/badge/Redux%20saga-86D46B?style=for-the-badge&logo=redux%20saga&logoColor=999999)
 
 ## Опис проекту
 
@@ -33,7 +35,7 @@
 
 `Посилання на сайт:` https://dmytro1117.github.io/blog/
 
-## Installation
+## Встановлення
 
 ```
 git clone https://github.com/Dmytro1117/blog.git

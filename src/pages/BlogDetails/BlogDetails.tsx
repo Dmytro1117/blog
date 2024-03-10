@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from 'react';
+import { useForm, SubmitHandler } from 'react-hook-form';
 import { useParams, Link } from 'react-router-dom';
 import { Notify } from 'notiflix/build/notiflix-notify-aio';
 import { ZodError } from 'zod';
-import { Formik, Form, Field, ErrorMessage } from 'formik';
 import { Loader } from 'components/Loader/Loader';
 import { Blog } from 'types/blogsSlice';
 import { useAppDispatch } from 'types/hooks';
@@ -12,10 +12,16 @@ import {
   fetchBlogs,
   updateBlog,
 } from 'types/operations';
-import { initialValues, schema } from 'components/BlogForm/BlogForm';
+import { schema } from 'components/BlogForm/BlogForm';
 import { Section } from 'components/Section/Section';
 import { ButtonSubmit, Input, Label } from 'components/BlogForm/BlogFormStyled';
 import { Button, Text, IconDelete, IconEdit } from './BlogDetailsStyled';
+
+type BlogFormValues = {
+  name: string;
+  about: string;
+  phone: string;
+};
 
 const BlogDetails: React.FC = () => {
   const { blogId } = useParams<{ blogId: string }>();
@@ -23,6 +29,12 @@ const BlogDetails: React.FC = () => {
   const [editMode, setEditMode] = useState(false);
   const [deleteButtonDisabled, setDeleteButtonDisabled] = useState(false);
   const dispatch = useAppDispatch();
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+    reset,
+  } = useForm<BlogFormValues>();
 
   useEffect(() => {
     if (blogId) {
@@ -30,6 +42,12 @@ const BlogDetails: React.FC = () => {
         .then(detailBlog => {
           if (detailBlog.payload && typeof detailBlog.payload === 'object') {
             setBlogInfo(detailBlog.payload);
+
+            reset({
+              name: detailBlog.payload.name,
+              about: detailBlog.payload.about,
+              phone: detailBlog.payload.phone,
+            });
           } else {
             console.log('Invalid payload received:', detailBlog.payload);
           }
@@ -38,10 +56,17 @@ const BlogDetails: React.FC = () => {
           console.log(error);
         });
     }
-  }, [dispatch, blogId]);
+  }, [dispatch, blogId, reset]);
 
   const refreshPosts = () => {
     dispatch(fetchBlogs());
+  };
+
+  const updateField = (fieldName: keyof Blog) => (value: string) => {
+    setBlogInfo(prevState => ({
+      ...prevState!,
+      [fieldName]: value || '',
+    }));
   };
 
   const handleDeleteBlog = async (id: string) => {
@@ -68,7 +93,7 @@ const BlogDetails: React.FC = () => {
         })
         .catch(error => {
           console.log(error);
-          Notify.failure('Помилка при оновленні поста');
+          Notify.failure('Помилка при оновленні посту');
         })
         .finally(() => {
           setDeleteButtonDisabled(false);
@@ -81,6 +106,7 @@ const BlogDetails: React.FC = () => {
         })
         .catch(error => {
           console.log(error);
+          Notify.failure('Помилка при видаленні посту');
         })
         .finally(() => {
           setDeleteButtonDisabled(false);
@@ -88,15 +114,15 @@ const BlogDetails: React.FC = () => {
     }
   };
 
-  const handleSave = async () => {
+  const onSubmit: SubmitHandler<BlogFormValues> = async data => {
     try {
-      await schema.parseAsync(blogInfo as Blog);
+      await schema.parseAsync(data);
     } catch (error) {
       if (error instanceof ZodError) {
-        const errorMessage = Object.values(error.errors)
-          .map(e => e.message)
-          .join('\n');
-        return Notify.warning(errorMessage);
+        error.errors.forEach(e => {
+          Notify.warning(e.message);
+        });
+        return;
       }
     }
 
@@ -108,7 +134,7 @@ const BlogDetails: React.FC = () => {
       })
       .catch(error => {
         console.log(error);
-        Notify.failure('Помилка при оновленні поста');
+        Notify.failure('Помилка при оновленні посту');
       });
   };
 
@@ -118,57 +144,46 @@ const BlogDetails: React.FC = () => {
 
   return (
     <>
-      <Link to={{ pathname: '/home' }}>
+      <Link to={{ pathname: '/list' }}>
         <Button type="button">Повернутися</Button>
       </Link>
 
       <Section title={blogInfo.name} key={blogInfo.id}>
         {editMode ? (
           <>
-            <Formik initialValues={initialValues} onSubmit={handleSave}>
-              <Form autoComplete="off">
-                <Label>
-                  Назва:
-                  <Field
-                    type="text"
-                    as={Input}
-                    name="name"
-                    value={blogInfo.name}
-                    onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-                      setBlogInfo({ ...blogInfo, name: e.target.value })
-                    }
-                  />
-                  <ErrorMessage name="name" component="div" />
-                </Label>
-                <Label>
-                  Опис:
-                  <Field
-                    type="text"
-                    as={Input}
-                    name="about"
-                    value={blogInfo.about}
-                    onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-                      setBlogInfo({ ...blogInfo, about: e.target.value })
-                    }
-                  />
-                  <ErrorMessage name="about" component="div" />
-                </Label>
-                <Label>
-                  Телефон:
-                  <Field
-                    type="text"
-                    as={Input}
-                    name="phone"
-                    value={blogInfo.phone}
-                    onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-                      setBlogInfo({ ...blogInfo, phone: e.target.value })
-                    }
-                  />
-                  <ErrorMessage name="phone" component="div" />
-                </Label>
-                <ButtonSubmit type="submit">Зберегти</ButtonSubmit>
-              </Form>
-            </Formik>
+            <form onSubmit={handleSubmit(onSubmit)} autoComplete="off">
+              <Label>
+                Назва:
+                <Input
+                  type="text"
+                  {...register('name')}
+                  value={blogInfo.name}
+                  onChange={e => updateField('name')(e.target.value)}
+                />
+                {errors.name && <div>{errors.name.message}</div>}
+              </Label>
+              <Label>
+                Опис:
+                <Input
+                  type="text"
+                  {...register('about')}
+                  value={blogInfo.about}
+                  onChange={e => updateField('about')(e.target.value)}
+                />
+                {errors.about && <div>{errors.about.message}</div>}
+              </Label>
+              <Label>
+                Телефон:
+                <Input
+                  type="text"
+                  {...register('phone')}
+                  value={blogInfo.phone}
+                  onChange={e => updateField('phone')(e.target.value)}
+                />
+                {errors.phone && <div>{errors.phone.message}</div>}
+              </Label>
+              <ButtonSubmit type="submit">Зберегти</ButtonSubmit>
+            </form>
           </>
         ) : (
           <>
@@ -180,7 +195,7 @@ const BlogDetails: React.FC = () => {
               onClick={() => setEditMode(true)}
             />
             {!editMode && (
-              <Link to={{ pathname: '/home' }}>
+              <Link to={{ pathname: '/list' }}>
                 {!deleteButtonDisabled ? (
                   <IconDelete
                     type="button"

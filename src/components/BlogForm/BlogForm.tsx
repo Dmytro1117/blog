@@ -1,11 +1,12 @@
+import React from 'react';
+import { useForm, SubmitHandler } from 'react-hook-form';
 import { Notify } from 'notiflix/build/notiflix-notify-aio';
 import { z, ZodError } from 'zod';
-import { Formik, Form, Field, ErrorMessage } from 'formik';
 import { useAppDispatch, useAppSelector } from 'types/hooks';
 import { addBlog } from 'types/operations';
 import { Label, Input, ButtonSubmit } from './BlogFormStyled';
 
-export type BlogFormValues = {
+type BlogFormValues = {
   name: string;
   about: string;
   phone: string;
@@ -17,49 +18,51 @@ export const schema = z.object({
     .refine(value => /^\p{Lu}[\p{L}\s.'-]+$/u.test(value), {
       message: 'Назва посту має починатися з великої літери (без цифр)',
     })
-    .refine(value => value.length <= 40, {
-      message: 'Максимальна довжина 40 символів',
-    })
-    .refine(value => value.length > 0, {
-      message: "Назва посту є обов'язковим полем",
-    }),
-  about: z.string(),
+    .refine(value => value.length <= 40, 'Максимальна довжина 40 символів')
+    .refine(value => value.length > 0, "Назва посту є обов'язковим полем"),
+  about: z
+    .string()
+    .refine(
+      value => value.trim().length > 0,
+      "Зміст посту є обов'язковим полем",
+    ),
   phone: z
     .string()
     .refine(value => /^\d{3}-\d{2}-\d{2}$/.test(value), {
       message: 'Номер має бути в форматі 555-55-55',
     })
-    .refine(value => value.length > 0, {
-      message: "Номер є обов'язковим полем",
-    }),
+    .refine(value => value.length > 0, "Номер є обов'язковим полем"),
 });
 
-export const initialValues: BlogFormValues = {
-  name: '',
-  about: '',
-  phone: '',
-};
-
-export const BlogForm = () => {
+export const BlogForm: React.FC = () => {
   const dispatch = useAppDispatch();
   const { items } = useAppSelector(state => state.blog);
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+    reset,
+  } = useForm<BlogFormValues>({
+    defaultValues: {
+      name: '',
+      about: '',
+      phone: '',
+    },
+  });
 
-  const handleSubmit = async (
-    values: BlogFormValues,
-    { resetForm }: { resetForm: () => void },
-  ) => {
+  const onSubmit: SubmitHandler<BlogFormValues> = async data => {
     try {
-      await schema.parseAsync(values);
+      await schema.parseAsync(data);
     } catch (error) {
       if (error instanceof ZodError) {
-        const errorMessage = Object.values(error.errors)
-          .map(e => e.message)
-          .join('\n');
-        return Notify.warning(errorMessage);
+        error.errors.forEach(e => {
+          Notify.warning(e.message);
+        });
+        return;
       }
     }
 
-    const { name, about, phone } = values;
+    const { name, about, phone } = data;
 
     if (
       items.some(
@@ -67,7 +70,8 @@ export const BlogForm = () => {
           num.name.toLowerCase() === name.toLowerCase() || num.phone === phone,
       )
     ) {
-      return Notify.warning(`${name} чи ${phone} вже існує`);
+      Notify.warning(`${name} чи ${phone} вже існує`);
+      return;
     }
 
     dispatch(
@@ -79,45 +83,34 @@ export const BlogForm = () => {
     );
 
     Notify.success(`${name}, ${about}, ${phone} додано успішно`);
-    resetForm();
+    reset();
   };
 
   return (
-    <Formik initialValues={initialValues} onSubmit={handleSubmit}>
-      <Form autoComplete="off">
-        <Label htmlFor="name">
-          Назва посту
-          <Field
-            placeholder="Введіть тему"
-            as={Input}
-            type="text"
-            name="name"
-          />
-          <ErrorMessage name="name" component="div" />
-        </Label>
-        <Label htmlFor="about">
-          Зміст посту
-          <Field
-            placeholder="Напишіть свої думки"
-            as={Input}
-            type="text"
-            name="about"
-          />
-          <ErrorMessage name="about" component="div" />
-        </Label>
-        <Label htmlFor="phone">
-          Телефон автора
-          <Field
-            placeholder="Введіть номер"
-            as={Input}
-            type="tel"
-            name="phone"
-          />
-          <ErrorMessage name="phone" component="div" />
-        </Label>
+    <form onSubmit={handleSubmit(onSubmit)} autoComplete="off">
+      <Label htmlFor="name">
+        Назва посту
+        <Input placeholder="Введіть тему" type="text" {...register('name')} />
+      </Label>
+      {errors.name && <div>{errors.name.message}</div>}
 
-        <ButtonSubmit type="submit">Додати</ButtonSubmit>
-      </Form>
-    </Formik>
+      <Label htmlFor="about">
+        Зміст посту
+        <Input
+          placeholder="Напишіть свої думки"
+          type="text"
+          {...register('about')}
+        />
+      </Label>
+      {errors.about && <div>{errors.about.message}</div>}
+
+      <Label htmlFor="phone">
+        Телефон автора
+        <Input placeholder="Введіть номер" type="tel" {...register('phone')} />
+      </Label>
+      {errors.phone && <div>{errors.phone.message}</div>}
+
+      <ButtonSubmit type="submit">Додати</ButtonSubmit>
+    </form>
   );
 };
