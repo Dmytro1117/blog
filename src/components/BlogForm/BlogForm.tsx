@@ -4,6 +4,7 @@ import { Notify } from 'notiflix/build/notiflix-notify-aio';
 import { z, ZodError } from 'zod';
 import { useAppDispatch, useAppSelector } from 'types/hooks';
 import { addBlog } from 'types/operations';
+import { InitNotify, MyNotifyOptions } from 'types/notifyInit';
 import { Label, Input, ButtonSubmit } from './BlogFormStyled';
 
 type BlogFormValues = {
@@ -11,6 +12,8 @@ type BlogFormValues = {
   about: string;
   phone: string;
 };
+
+Notify.init(InitNotify as MyNotifyOptions);
 
 export const schema = z.object({
   name: z

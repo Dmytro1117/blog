@@ -10,7 +10,7 @@ export const Label = styled.label`
   @media (min-width: 481px) and (max-width: 767px) {
     width: 320px;
     margin-bottom: 12px;
-    font-size: 14px;
+    font-size: 20px;
     padding: 8px 14px;
   }
 `;
@@ -80,7 +80,7 @@ export const ButtonSubmit = styled.button`
       font-size: 16px;
       font-weight: 600;
       margin-top: 24px;
-      padding: 8px 24px;
+      padding: 8px;
       color: white;
       background-color: rgba(19, 116, 206, 0.781);
     }

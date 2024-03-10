@@ -18,7 +18,7 @@ export const Container = styled.section`
 
   @media (min-width: 481px) and (max-width: 767px) {
     width: 400px;
-    padding: 24px;
+    padding: 16px;
     box-shadow: 4px 4px 8px #8888888e;
     margin: 18px auto;
   }
@@ -38,7 +38,6 @@ export const Title = styled.h2`
     font-size: 20px;
     font-weight: 400;
     max-width: 300px;
-    overflow-wrap: break-word;
     margin-bottom: 8px;
   }
 
