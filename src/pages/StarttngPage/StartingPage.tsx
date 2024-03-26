@@ -1,7 +1,7 @@
 import React from 'react';
-import { useAppSelector } from 'types/hooks';
+import { useAppSelector } from 'hooks/hooks';
 import { Loader } from 'components/Loader/Loader';
-import { Tex, Img, Container } from './StartingPageStyled';
+import { Text, Img, Container } from './StartingPageStyled';
 import hero from 'images/pngegg.png';
 
 const StartingPage: React.FC = () => {
@@ -10,7 +10,7 @@ const StartingPage: React.FC = () => {
   return (
     <Container>
       {isLoading && !error && <Loader />}
-      <Tex>Записник</Tex>
+      <Text>Записник</Text>
       <Img src={hero} alt="Mr.Hero" />
     </Container>
   );

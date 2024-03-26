@@ -1,6 +1,6 @@
 import styled from '@emotion/styled';
 
-export const Tex = styled.p`
+export const Text = styled.p`
   color: orange;
   padding: 10px;
   font-size: 44px;

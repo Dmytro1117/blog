@@ -1,11 +1,11 @@
 import React from 'react';
 import { useLocation } from 'react-router-dom';
-import { useAppSelector } from 'types/hooks';
+import { useAppSelector } from 'hooks/hooks';
 import { AnimatePresence, motion } from 'framer-motion';
 import { List, BlogLink, Text } from './BlogListStyled';
 import { Container } from './BlogListStyled';
-import notFound from 'images/guest-blogging.jpg';
 import { Img } from 'pages/StarttngPage/StartingPageStyled';
+import notFound from 'images/guest-blogging.jpg';
 
 export const BlogList: React.FC = () => {
   const { items } = useAppSelector(state => state.blog);
@@ -27,12 +27,12 @@ export const BlogList: React.FC = () => {
         {items.map(({ id, name }) => (
           <motion.div
             initial="hidden"
-            key={id}
+            key={name}
             animate="visible"
             variants={variants}
             transition={{ duration: 1.2 }}
           >
-            <BlogLink to={`/list/details/${id}`} state={{ from: location }}>
+            <BlogLink to={`/list/details/${id}`} state={{ from: location }} key={id}>
               <Container>
                 <Text>{name}</Text>
               </Container>

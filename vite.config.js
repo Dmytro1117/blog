@@ -8,8 +8,12 @@ export default defineConfig({
   resolve: {
     alias: {
       components: '/src/components',
-      types: '/src/types',
+      storeRedux: '/src/storeRedux',
       pages: '/src/pages',
+      hooks: '/src/hooks',
+      api: '/src/api',
+      features: '/src/features',
+      helpers: '/src/helpers',
       images: '/src/images',
     },
   },

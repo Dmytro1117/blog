@@ -20,16 +20,15 @@
     "baseUrl": "src",
     "paths": {
       "components/*": ["components/*"],
-      "types/*": ["types/*"],
+      "storeRedux/*": ["storeRedux/*"],
       "pages/*": ["pages/*"],
+      "helpers/*": ["helpers/*"],
+      "hooks/*": ["hooks/*"],
+      "api/*": ["api/*"],
+      "features/*": ["features/*"],
       "images/*": ["images/*"]
     }
   },
-  "include": [
-    "src/**/*.ts",
-    "src/**/*.tsx",
-    "src/**/*.css",
-    "node_modules/@types"
-  ],
+  "include": ["src/**/*.ts", "src/**/*.tsx", "src/**/*.css", "node_modules/@types"],
   "exclude": ["node_modules"]
 }
