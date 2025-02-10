@@ -9,7 +9,7 @@ import './index.css';
 const root = ReactDOM.createRoot(document.getElementById('root') as HTMLElement);
 root.render(
   <Provider store={store}>
-    <BrowserRouter basename="/blog">
+    <BrowserRouter future={{ v7_startTransition: true }}>
       <App />
     </BrowserRouter>
   </Provider>,

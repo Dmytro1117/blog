@@ -4,7 +4,7 @@ import { Tex, Footerr } from './FooterStyled';
 const Footer: React.FC = () => {
   return (
     <Footerr>
-      <Tex>&#169; 2024 | All Rights Reserved |</Tex>
+      <Tex>&#169; 2025 | All Rights Reserved |</Tex>
     </Footerr>
   );
 };
