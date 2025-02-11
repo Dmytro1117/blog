@@ -33,7 +33,7 @@
 
 5. База даних: Firestore DB.
 
-`Посилання на сайт:` https://dmytro1117.github.io/blog/
+`Посилання на сайт:` https://blog-taupe-two-16.vercel.app/
 
 ## Встановлення
 

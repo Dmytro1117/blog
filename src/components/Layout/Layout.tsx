@@ -10,22 +10,25 @@ import {
   Content,
   Logo,
   SearchLogo,
+  Wrapper,
 } from './LayoutStyled';
 import Logotip from 'images/ico.png';
 
 const Layout: React.FC = () => {
   return (
     <Container>
-      <Header>
-        <Logo to="/">
-          <SearchLogo src={Logotip} alt="logo" />
-        </Logo>
+      <Wrapper>
+        <Header>
+          <Logo to="/">
+            <SearchLogo src={Logotip} alt="logo" />
+          </Logo>
 
-        <Navigation>
-          <Link to="/home">Додати запис</Link>
-          <Link to="/list">Список постів</Link>
-        </Navigation>
-      </Header>
+          <Navigation>
+            <Link to="/home">Додати запис</Link>
+            <Link to="/list">Список постів</Link>
+          </Navigation>
+        </Header>
+      </Wrapper>
 
       <Content>
         <Suspense fallback={<Loader />}>

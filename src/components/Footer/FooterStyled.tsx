@@ -6,8 +6,8 @@ export const Footerr = styled.footer`
   justify-content: center;
   width: 100%;
   margin-top: auto;
-  background: #e2e2e2;
-  box-shadow: 0px -3px 5px 0px rgba(0, 0, 0, 0.5);
+  background: rgba(100, 99, 99, 0.24);
+  border-top: 2px solid #3a97e8;
 `;
 
 export const Tex = styled.p`

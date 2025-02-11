@@ -4,10 +4,19 @@ import { NavLink } from 'react-router-dom';
 export const Container = styled.div`
   display: flex;
   flex-direction: column;
-  max-width: 1170px;
+  min-height: 100vh;
+  align-items: center;
+`;
+
+export const Wrapper = styled.div`
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   margin-left: auto;
   margin-right: auto;
-  min-height: 100vh;
+  border-bottom: 2px solid #3a97e8;
+  background: rgba(153, 153, 153, 0.24);
 `;
 
 export const Content = styled.div`
@@ -23,7 +32,7 @@ export const Header = styled.header`
   width: 100%;
   display: flex;
   justify-content: space-between;
-  box-shadow: 0px 3px 5px 0px rgba(0, 0, 0, 0.5);
+  width: 1200px;
 `;
 
 export const Link = styled(NavLink)`
