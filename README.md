@@ -1,6 +1,6 @@
 # blog
 
-![blog](./blog.png)
+![blog](./assets/blog.png)
 
 ## Стек технологій
 
